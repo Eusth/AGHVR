@@ -73,44 +73,6 @@ namespace AGHVR
 
         public void OnUpdate()
         {
-            
-
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-              
-                //foreach(var face in GameObject.FindObjectsOfType<SkinnedMeshRenderer>())//.Where(t =>t.name.EndsWith("_face")))
-                //{
-                //    //face.gameObject.SetActive(false);
-                //    VRLog.Info(face.name + " : " + string.Join(", ", face.bones.Select(b => b.name).ToArray()));
-                //}
-                //var pattern = new Regex("eye", RegexOptions.IgnoreCase);
-                //foreach (var animator in GameObject.FindObjectsOfType<Animator>())
-                //{
-                //    var eye = animator.transform.FindDescendant(pattern);
-                //    if(eye)
-                //    {
-                //        UnityHelper.DrawDebugBall(eye);
-                //    } else
-                //    {
-                //        VRLog.Info("No eye found: " + animator.name);
-                //    }
-
-                //    //VRLog.Info(animator.name + " : " + animator.isHuman + " : " + (bone ? bone.position : Vector3.down));
-                //}
-
-                //foreach(var face in GameObject.FindObjectsOfType<Transform>().Where(t => t.name.Contains("Head") && t.name.Contains("Nub")))
-                //{
-                //    VRLog.Info(face.name);
-                //    UnityHelper.DrawDebugBall(face);
-
-                //    UnityHelper.DrawRay(UnityEngine.Random.ColorHSV(), face.parent.parent.position, face.parent.parent.forward);
-                //}
-
-                foreach (var actor in VR.Interpreter.Actors)
-                {
-                    UnityHelper.DrawRay(UnityEngine.Random.ColorHSV(), actor.Eyes.position, actor.Eyes.up);
-                }
-            }
         }
     }
 }
