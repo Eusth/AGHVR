@@ -67,7 +67,7 @@ namespace AGHVR
             var bgGrabber = new ScreenGrabber(1280, 720, ScreenGrabber.FromList(
                 "Camera_BG",   // backgrounds
                 "Camera_Main", // no idea
-                //"Camera_Effect", // effects (e.g. vignette?)
+                "Camera_Effect", // effects (e.g. vignette?)
                 "Camera"       // cinematics
             ));
             _BGDisplay = GUIQuad.Create(bgGrabber);
@@ -76,15 +76,10 @@ namespace AGHVR
             DontDestroyOnLoad(_BGDisplay.gameObject);
 
             _BGDisplay.gameObject.SetActive(false);
-            VR.GUI.AddGrabber(new CameraConsumer());
+            //VR.GUI.AddGrabber(new CameraConsumer());
             VR.GUI.AddGrabber(bgGrabber);
 
             Invoke(() => OnLevel(SceneManager.GetActiveScene().buildIndex), 0.1f);
-        }
-
-        void SetUpFirstLevel()
-        {
-            StartCoroutine(PushBack());
         }
 
         public override Camera FindCamera()
@@ -104,17 +99,13 @@ namespace AGHVR
             var scene = SceneManager.GetActiveScene();
             VRLog.Info("Entering Scene: {0}", scene.name);
 
-            if (level == 0)
+            if (level == 6)
             {
-                SetUpFirstLevel();
-            }
-            if(level == 6)
-            {
-                var cam = GameObject.Find("CU_Camera").GetComponent<Camera>();
-                cam.targetTexture = VR.GUI.uGuiTexture;
-                cam.depth = 10;
+                //var cam = GameObject.Find("CU_Camera").GetComponent<Camera>();
+                //cam.targetTexture = VR.GUI.uGuiTexture;
+                //cam.depth = 10;
 
-                VR.Camera.GetComponent<Camera>().cullingMask |= LayerMask.GetMask("CH00", "CH01", "CH02", "PC", "Light", "BG", "Mob", "LB02", "LB03");
+                //VR.Camera.GetComponent<Camera>().cullingMask |= LayerMask.GetMask("CH00", "CH01", "CH02", "PC", "Light", "BG", "Mob", "LB02", "LB03");
             }
 
             AcquireBG();
@@ -192,9 +183,6 @@ namespace AGHVR
                 cam.targetTexture = VR.GUI.uGuiTexture;
                 cam.depth = 10;
 
-                var cullingMask = ~(LayerMask.GetMask(VR.Context.UILayer, VR.Context.InvisibleLayer));
-                cullingMask |= LayerMask.GetMask("Default");
-
                 VR.Camera.GetComponent<Camera>().cullingMask &= (~LayerMask.GetMask("NGUI_UI"));
             }
         }
@@ -269,6 +257,25 @@ namespace AGHVR
         private bool AnyChildrenActive(GameObject obj)
         {
             return NotNullAndActive(obj) && obj.Children().Any(c => c && c.activeSelf);
+        }
+
+        public override int DefaultCullingMask
+        {
+            get
+            {
+                int level = SceneManager.GetActiveScene().buildIndex;
+                int cullingMask = base.DefaultCullingMask;
+
+                switch(level)
+                {
+                    case 0:
+                    case 6:
+                        cullingMask |= LayerMask.GetMask("CH00", "CH01", "CH02", "PC", "Light", "BG", "Mob", "LB02", "LB03");
+                        break;
+                }
+
+                return cullingMask;
+            }
         }
     }
 }

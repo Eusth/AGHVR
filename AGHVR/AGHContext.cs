@@ -26,6 +26,14 @@ namespace AGHVR
             }
         }
 
+        public bool EnforceDefaultGUIMaterials
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public bool GUIAlternativeSortingMode
         {
             get
