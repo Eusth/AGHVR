@@ -63,7 +63,6 @@ namespace AGHVR
         protected override void OnStart()
         {
             base.OnStart();
-
             var bgGrabber = new ScreenGrabber(1280, 720, ScreenGrabber.FromList(
                 "Camera_BG",   // backgrounds
                 "Camera_Main", // no idea
@@ -111,7 +110,10 @@ namespace AGHVR
             AcquireBG();
             if(!_CurrentBG)
             {
-                StartCoroutine(LoadBG("CO"));
+                var cam = VR.Camera.GetComponent<Camera>();
+                cam.clearFlags = CameraClearFlags.SolidColor;
+                cam.backgroundColor = Color.black;
+                //    StartCoroutine(LoadBG("CO"));
             }
 
             //if(level == 7)
@@ -133,6 +135,7 @@ namespace AGHVR
         private IEnumerator LoadBG(string name)
         {
             VRLog.Info("Loading BG from other scene ({0})", name);
+
             SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
             var scene = SceneManager.GetSceneAt(1);
 
@@ -143,7 +146,9 @@ namespace AGHVR
 
             var bg = scene.GetRootGameObjects().FirstOrDefault(o => o.name == "BG00");
             SceneManager.MoveGameObjectToScene(bg, SceneManager.GetActiveScene());
-            SceneManager.UnloadScene(name);
+            SceneManager.UnloadSceneAsync(name);
+
+            VRLog.Info("Done loading BG from other scene ({0})", name);
 
             AcquireBG();
         }
